@@ -1,0 +1,2506 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LazeV Service - FiveM Scripts & Discord Bots</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --dark-gray: #1a1a1a;
+            --medium-gray: #2d2d2d;
+            --light-gray: #3d3d3d;
+            --accent: #4a4a4a;
+            --text: #f1f1f1;
+            --highlight: #5e5e5e;
+            --success: #4CAF50;
+            --error: #f44336;
+            --price: #4CAF50;
+            --primary: #5865f2;
+        }
+        
+        /* Barrierefreiheit Variablen */
+        .accessibility-high-contrast {
+            --dark-gray: #000000;
+            --medium-gray: #333333;
+            --light-gray: #555555;
+            --text: #ffffff;
+            --highlight: #777777;
+        }
+        
+        .accessibility-yellow-black {
+            --dark-gray: #000000;
+            --medium-gray: #333333;
+            --light-gray: #555555;
+            --text: #ffff00;
+            --highlight: #777777;
+        }
+        
+        .accessibility-large-text {
+            font-size: 120%;
+        }
+        
+        .accessibility-larger-text {
+            font-size: 150%;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--dark-gray) 0%, var(--medium-gray) 100%);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+        }
+        
+        /* Accessibility Bar */
+        .accessibility-bar {
+            background-color: rgba(0, 0, 0, 0.9);
+            padding: 8px 5%;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1001;
+            font-size: 0.9rem;
+        }
+        
+        .accessibility-item {
+            margin-left: 15px;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        .accessibility-item:hover {
+            background-color: var(--highlight);
+        }
+        
+        .accessibility-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .accessibility-dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: var(--dark-gray);
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .accessibility-dropdown-content a {
+            color: var(--text);
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+        
+        .accessibility-dropdown-content a:hover {
+            background-color: var(--highlight);
+        }
+        
+        .accessibility-dropdown:hover .accessibility-dropdown-content {
+            display: block;
+        }
+        
+        /* Navigation */
+        nav {
+            background-color: rgba(26, 26, 26, 0.9);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            position: sticky;
+            top: 32px;
+            z-index: 1000;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 15px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+        
+        .logo:hover {
+            transform: rotate(10deg) scale(1.05);
+        }
+        
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            align-items: center;
+        }
+        
+        .nav-links li {
+            margin-left: 25px;
+        }
+        
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 15px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-links a:hover, .nav-links a.active {
+            background-color: var(--highlight);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .user-icon {
+            cursor: pointer;
+            font-size: 1.5rem;
+            padding: 8px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+        
+        .user-icon:hover {
+            background-color: var(--highlight);
+            transform: translateY(-3px);
+        }
+        
+        /* Container mit abgerundeten Ecken */
+        .rounded-container {
+            background-color: var(--medium-gray);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px auto;
+            max-width: 1200px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            overflow: hidden;
+        }
+        
+        .rounded-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        }
+        
+        /* Hauptinhalt */
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+            animation: fadeIn 1s ease-out;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #aaa, #eee);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 10px rgba(255, 255, 255, 0.2);
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 30px;
+            line-height: 1.6;
+        }
+        
+        .discord-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary), #4752c4);
+            color: white;
+            padding: 15px 35px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(88, 101, 242, 0.4);
+        }
+        
+        .discord-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(88, 101, 242, 0.6);
+        }
+        
+        /* Services Bereich */
+        .services {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+        
+        .service-card {
+            background: var(--light-gray);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .service-card i {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: #aaa;
+        }
+        
+        .service-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+        
+        /* Shop Styles */
+        .shop-header {
+            text-align: center;
+            padding: 40px 20px;
+            animation: fadeIn 1s ease-out;
+        }
+        
+        .shop-header h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #aaa, #eee);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 10px rgba(255, 255, 255, 0.2);
+        }
+        
+        .categories {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 30px 0;
+        }
+        
+        .category-btn {
+            background: var(--light-gray);
+            color: var(--text);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .category-btn.active, .category-btn:hover {
+            background: var(--highlight);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+        
+        .product-card {
+            background: var(--light-gray);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .product-image {
+            height: 200px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .product-card:hover .product-image img {
+            transform: scale(1.1);
+        }
+        
+        .product-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--price);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .product-info {
+            padding: 20px;
+        }
+        
+        .product-title {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+        
+        .product-description {
+            color: #ccc;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        .product-price {
+            color: var(--price);
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .buy-btn {
+            display: block;
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary), #4752c4);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .buy-btn:hover {
+            background: linear-gradient(135deg, #4752c4, #3a45a8);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(88, 101, 242, 0.4);
+        }
+        
+        /* Warenkorb */
+        .cart-container {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100vh;
+            background: var(--medium-gray);
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.5);
+            transition: right 0.3s ease;
+            z-index: 1001;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .cart-container.open {
+            right: 0;
+        }
+        
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        .cart-header h2 {
+            font-size: 1.8rem;
+        }
+        
+        .close-cart {
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .cart-items {
+            margin-bottom: 20px;
+        }
+        
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        .cart-item-info {
+            flex: 1;
+        }
+        
+        .cart-item-title {
+            font-weight: bold;
+        }
+        
+        .cart-item-price {
+            color: var(--price);
+        }
+        
+        .cart-item-quantity {
+            display: flex;
+            align-items: center;
+            margin: 0 10px;
+        }
+        
+        .quantity-btn {
+            background: var(--light-gray);
+            border: none;
+            color: var(--text);
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        
+        .cart-item-remove {
+            background: none;
+            border: none;
+            color: var(--error);
+            cursor: pointer;
+        }
+        
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin: 20px 0;
+            padding-top: 15px;
+            border-top: 1px solid var(--light-gray);
+        }
+        
+        .checkout-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, var(--primary), #4752c4);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .checkout-btn:hover {
+            background: linear-gradient(135deg, #4752c4, #3a45a8);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(88, 101, 242, 0.4);
+        }
+        
+        /* Checkout Prozess */
+        .checkout-container {
+            display: none;
+            padding: 20px;
+        }
+        
+        .checkout-form {
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: var(--light-gray);
+            color: var(--text);
+        }
+        
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+            margin-bottom: 30px;
+        }
+        
+        .payment-method {
+            background: var(--light-gray);
+            border: 2px solid transparent;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .payment-method.selected {
+            border-color: var(--primary);
+            background: rgba(88, 101, 242, 0.2);
+        }
+        
+        .payment-method i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        /* Login Formular */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-grow: 1;
+            padding: 40px 20px;
+        }
+        
+        .login-form {
+            background: var(--medium-gray);
+            border-radius: 15px;
+            padding: 40px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .login-form:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        }
+        
+        .login-form h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2rem;
+            background: linear-gradient(to right, #aaa, #eee);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--primary), #4752c4);
+            color: white;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .login-btn:hover {
+            background: linear-gradient(135deg, #4752c4, #3a45a8);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(88, 101, 242, 0.4);
+        }
+        
+        .message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            display: none;
+        }
+        
+        .success {
+            background-color: rgba(76, 175, 80, 0.2);
+            border: 1px solid var(--success);
+            color: var(--success);
+        }
+        
+        .error {
+            background-color: rgba(244, 67, 54, 0.2);
+            border: 1px solid var(--error);
+            color: var(--error);
+        }
+        
+        /* Admin Dashboard */
+        .admin-dashboard {
+            display: none;
+            padding: 40px 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        .dashboard-header h2 {
+            font-size: 2.2rem;
+            background: linear-gradient(to right, #aaa, #eee);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .logout-btn {
+            padding: 10px 20px;
+            background: var(--error);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .logout-btn:hover {
+            background: #d32f2f;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(244, 67, 54, 0.4);
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .dashboard-card {
+            background: var(--medium-gray);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        }
+        
+        .dashboard-card h3 {
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+            color: #aaa;
+        }
+        
+        .stat {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .admin-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .action-btn {
+            padding: 15px;
+            background: var(--light-gray);
+            border: none;
+            border-radius: 8px;
+            color: var(--text);
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .action-btn:hover {
+            background: var(--highlight);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Bestellungen Tabelle */
+        .orders-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: var(--light-gray);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .orders-table th, .orders-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+        
+        .orders-table th {
+            background-color: var(--accent);
+            font-weight: 600;
+        }
+        
+        .orders-table tr:hover {
+            background-color: rgba(94, 94, 94, 0.2);
+        }
+        
+        .status {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            display: inline-block;
+            text-align: center;
+            min-width: 100px;
+        }
+        
+        .status.completed {
+            background-color: rgba(76, 175, 80, 0.2);
+            color: var(--success);
+        }
+        
+        .status.pending {
+            background-color: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+        }
+        
+        .status.cancelled {
+            background-color: rgba(244, 67, 54, 0.2);
+            color: var(--error);
+        }
+        
+        /* Beer Compliance */
+        .beer-compliance {
+            background: var(--light-gray);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 40px;
+            text-align: center;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 rgba(94, 94, 94, 0.4); }
+            50% { box-shadow: 0 0 20px rgba(94, 94, 94, 0.8); }
+            100% { box-shadow: 0 0 0 rgba(94, 94, 94, 0.4); }
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--dark-gray);
+            padding: 30px 5%;
+            text-align: center;
+            margin-top: auto;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .footer-logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .footer-links a {
+            color: var(--text);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: #aaa;
+        }
+        
+        .accessibility-statement {
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+        
+        /* Overlay für Warenkorb */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+        }
+        
+        /* Animationen */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        
+        .animate.animated {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Seiten-Styles */
+        .page {
+            display: none;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        /* Warenkorb Icon mit Badge */
+        .cart-icon-container {
+            position: relative;
+            margin-left: 25px;
+        }
+        
+        .cart-icon {
+            cursor: pointer;
+            font-size: 1.5rem;
+            padding: 8px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+        
+        .cart-icon:hover {
+            background-color: var(--highlight);
+            transform: translateY(-3px);
+        }
+        
+        .cart-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--error);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+        
+        /* Impressum & Datenschutz Styles */
+        .legal-content {
+            line-height: 1.6;
+        }
+        
+        .legal-content h1 {
+            font-size: 2.5rem;
+            margin-bottom: 25px;
+            background: linear-gradient(to right, #aaa, #eee);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-align: center;
+        }
+        
+        .legal-content h2 {
+            font-size: 1.5rem;
+            margin: 25px 0 15px;
+            color: #ccc;
+            border-bottom: 1px solid var(--light-gray);
+            padding-bottom: 10px;
+        }
+        
+        .legal-content h3 {
+            font-size: 1.2rem;
+            margin: 20px 0 10px;
+            color: #ccc;
+        }
+        
+        .legal-content p, .legal-content li {
+            margin-bottom: 15px;
+            color: #e0e0e0;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+        
+        .legal-content ul {
+            padding-left: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .legal-content a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        .legal-content a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Admin Formulare */
+        .admin-form {
+            background: var(--light-gray);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .admin-form h3 {
+            margin-bottom: 15px;
+            color: #ccc;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+        
+        /* Produktverwaltung */
+        .product-management {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .product-list {
+            background: var(--light-gray);
+            border-radius: 10px;
+            padding: 15px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        
+        .product-list-item {
+            padding: 10px;
+            border-bottom: 1px solid var(--medium-gray);
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .product-list-item:hover {
+            background: var(--accent);
+        }
+        
+        .product-list-item.selected {
+            background: var(--primary);
+        }
+        
+        .product-form {
+            background: var(--light-gray);
+            border-radius: 10px;
+            padding: 15px;
+        }
+        
+        /* Tabs */
+        .admin-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        .admin-tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background: var(--light-gray);
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
+        }
+        
+        .admin-tab.active {
+            background: var(--primary);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Accessibility Bar -->
+    <div class="accessibility-bar">
+        <div class="accessibility-item" onclick="toggleHighContrast()">
+            <i class="fas fa-adjust"></i> Kontrast
+        </div>
+        <div class="accessibility-dropdown">
+            <div class="accessibility-item">
+                <i class="fas fa-text-height"></i> Schriftgröße
+            </div>
+            <div class="accessibility-dropdown-content">
+                <a href="#" onclick="setFontSize('normal'); return false;">Standard</a>
+                <a href="#" onclick="setFontSize('large'); return false;">Vergrößert</a>
+                <a href="#" onclick="setFontSize('larger'); return false;">Sehr groß</a>
+            </div>
+        </div>
+        <div class="accessibility-item" onclick="speakPageTitle()">
+            <i class="fas fa-volume-up"></i> Vorlesen
+        </div>
+    </div>
+
+    <!-- Overlay für Warenkorb -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Warenkorb -->
+    <div class="cart-container" id="cartContainer">
+        <div class="cart-header">
+            <h2>Warenkorb</h2>
+            <button class="close-cart" onclick="closeCart()">&times;</button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <!-- Warenkorb-Inhalt wird dynamisch eingefügt -->
+        </div>
+        <div class="cart-total">
+            <span>Gesamtsumme:</span>
+            <span id="cartTotal">€0.00</span>
+        </div>
+        <button class="checkout-btn" onclick="showCheckout()">Zur Kasse</button>
+        
+        <!-- Checkout Formular -->
+        <div class="checkout-container" id="checkoutContainer">
+            <h3>Bestellinformationen</h3>
+            <div class="checkout-form">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" placeholder="Vor- und Nachname">
+                </div>
+                <div class="form-group">
+                    <label for="email">E-Mail</label>
+                    <input type="email" id="email" placeholder="Ihre E-Mail Adresse">
+                </div>
+                <div class="form-group">
+                    <label for="address">Adresse</label>
+                    <input type="text" id="address" placeholder="Straße und Hausnummer">
+                </div>
+                <div class="form-group">
+                    <label for="city">Stadt & PLZ</label>
+                    <input type="text" id="city" placeholder="Stadt und Postleitzahl">
+                </div>
+            </div>
+            
+            <h3>Zahlungsmethode</h3>
+            <div class="payment-methods">
+                <div class="payment-method" onclick="selectPayment('paypal')">
+                    <i class="fab fa-paypal"></i>
+                    <div>PayPal</div>
+                </div>
+                <div class="payment-method" onclick="selectPayment('creditcard')">
+                    <i class="far fa-credit-card"></i>
+                    <div>Kreditkarte</div>
+                </div>
+                <div class="payment-method" onclick="selectPayment('sofort')">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <div>Sofortüberweisung</div>
+                </div>
+                <div class="payment-method" onclick="selectPayment('banktransfer')">
+                    <i class="fas fa-university"></i>
+                    <div>Überweisung</div>
+                </div>
+            </div>
+            
+            <button class="checkout-btn" onclick="placeOrder()">Jetzt bestellen</button>
+            <button class="checkout-btn" style="background: var(--light-gray); margin-top: 10px;" onclick="backToCart()">Zurück zum Warenkorb</button>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="logo-container">
+            <div class="logo">
+                <img src="https://cdn.discordapp.com/attachments/1073312264632942774/1416513700797354114/image.png?ex=68c71eaf&is=68c5cd2f&hm=6641876696563136309b8845b61cb5ae604e255a5ee394236a026f4100a97fa7&" alt="LazeV Service Logo">
+            </div>
+            <div class="logo-text">LazeV Service</div>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#" class="nav-link active" data-page="home">Startseite</a></li>
+            <li><a href="#" class="nav-link" data-page="shop">Shop</a></li>
+            <li><a href="#" class="nav-link" data-page="discord">Discord</a></li>
+            <li><a href="#" class="nav-link" data-page="team">Team</a></li>
+            <li class="cart-icon-container">
+                <div class="cart-icon" onclick="openCart()">
+                    <i class="fas fa-shopping-cart"></i>
+                    <div class="cart-badge" id="cartBadge">0</div>
+                </div>
+            </li>
+            <li>
+                <div class="user-icon" onclick="toggleAdminLogin()">
+                    <i class="fas fa-user"></i>
+                </div>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Startseite -->
+    <div id="home" class="page active">
+        <main>
+            <section class="hero">
+                <h1>FiveM Scripts & Discord Bots</h1>
+                <p>Wir bieten hochwertige FiveM Scripts und maßgeschneiderte Discord Bots für deinen Server. Unser Team aus erfahrenen Entwicklern sorgt für qualitativ hochwertige Lösungen.</p>
+                <a href="https://discord.gg/f57RjCrb9w" class="discord-btn" target="_blank">Trete unserem Discord bei!</a>
+            </section>
+
+            <div class="rounded-container">
+                <h2>Unsere Services</h2>
+                <div class="services">
+                    <div class="service-card animate">
+                        <i class="fas fa-code"></i>
+                        <h3>FiveM Scripts</h3>
+                        <p>Maßgeschneiderte FiveM Scripts für deinen Server. Von einfachen Features bis zu komplexen Systemen.</p>
+                    </div>
+                    <div class="service-card animate">
+                        <i class="fab fa-discord"></i>
+                        <h3>Discord Bots</h3>
+                        <p>Individuelle Discord Bots mit genau den Funktionen, die deine Community benötigt.</p>
+                    </div>
+                    <div class="service-card animate">
+                        <i class="fas fa-tools"></i>
+                        <h3>Support & Wartung</h3>
+                        <p>Umfassender Support und regelmäßige Updates für alle unsere Produkte.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="rounded-container">
+                <h2>Über uns</h2>
+                <p>Wir sind ein Team aus leidenschaftlichen Entwicklern mit Fokus auf FiveM und Discord Lösungen. Unter der Leitung von Luca, Max und Jonas bieten wir erstklassige Services für deine Community.</p>
+                <p>Unsere Mission ist es, qualitativ hochwertige und zuverlässige Scripts und Bots zu entwickeln, die deinen Server auf das nächste Level heben.</p>
+            </div>
+
+            <div class="beer-compliance animate">
+                <h3><i class="fas fa-beer"></i> Alkoholfrei gemäß deutscher Richtlinien</h3>
+                <p>Diese Website entspricht allen deutschen Compliance-Anforderungen.</p>
+            </div>
+        </main>
+    </div>
+
+    <!-- Shop Seite -->
+    <div id="shop" class="page">
+        <main>
+            <section class="shop-header">
+                <h1>LazeV Shop</h1>
+                <p>Entdecke unsere hochwertigen FiveM Scripts und Discord Bots für deinen Server. Qualität und Performance garantiert!</p>
+            </section>
+
+            <div class="rounded-container">
+                <div class="categories">
+                    <button class="category-btn active" data-category="all">Alle Produkte</button>
+                    <button class="category-btn" data-category="fivem">FiveM Scripts</button>
+                    <button class="category-btn" data-category="discord">Discord Bots</button>
+                    <button class="category-btn" data-category="bundles">Bundles</button>
+                    <button class="category-btn" data-category="sale">Angebote</button>
+                </div>
+                
+                <div class="products-grid" id="productsGrid">
+                    <!-- Produkte werden dynamisch eingefügt -->
+                </div>
+            </div>
+
+            <div class="rounded-container">
+                <h2>Warum unsere Produkte wählen?</h2>
+                <ul style="list-style: none; line-height: 2;">
+                    <li><i class="fas fa-check" style="color: #4CAF50;"></i> Höchste Qualitätsstandards</li>
+                    <li><i class="fas fa-check" style="color: #4CAF50;"></i> Regelmäßige Updates und Bugfixes</li>
+                    <li><i class="fas fa-check" style="color: #4CAF50;"></i> Umfassender Support</li>
+                    <li><i class="fas fa-check" style="color: #4CAF50;"></i> Einfache Installation</li>
+                    <li><i class="fas fa-check" style="color: #4CAF50;"></i> Optimierte Performance</li>
+                </ul>
+            </div>
+        </main>
+    </div>
+
+    <!-- Discord Seite -->
+    <div id="discord" class="page">
+        <main>
+            <section class="hero">
+                <h1>Trete unserem Discord bei!</h1>
+                <p>Werde Teil unserer Community und bleibe auf dem neuesten Stand bezüglich Updates, neuen Produkten und exklusiven Angeboten.</p>
+                <a href="https://discord.gg/f57RjCrb9w" class="discord-btn" target="_blank">Jetzt beitreten</a>
+            </section>
+
+            <div class="rounded-container">
+                <h2>Unsere Discord Community</h2>
+                <p>Unser Discord-Server ist der zentrale Treffpunkt für alle FiveM-Enthusiasten. Hier findest du:</p>
+                <div class="services">
+                    <div class="service-card animate">
+                        <i class="fas fa-headset"></i>
+                        <h3>Support</h3>
+                        <p>Schnelle Hilfe bei Fragen und Problemen mit unseren Produkten direkt von unseren Entwicklern.</p>
+                    </div>
+                    <div class="service-card animate">
+                        <i class="fas fa-newspaper"></i>
+                        <h3>Updates</h3>
+                        <p>Erfahre als Erster von neuen Updates, Features und kommenden Produkten.</p>
+                    </div>
+                    <div class="service-card animate">
+                        <i class="fas fa-gift"></i>
+                        <h3>Exklusive Angebote</h3>
+                        <p>Spezielle Rabatte und Angebote nur für unsere Discord-Mitglieder.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="rounded-container">
+                <h2>Wie du beitrittst</h2>
+                <ol style="line-height: 2; padding-left: 20px;">
+                    <li>Klicke auf den "Jetzt beitreten" Button</li>
+                    <li>Erstelle einen Discord Account falls du noch keinen hast</li>
+                    <li>Bestätige die Einladung zu unserem Server</li>
+                    <li>Lies die Regeln und akzeptiere sie</li>
+                    <li>Viel Spaß in unserer Community!</li>
+                </ol>
+            </div>
+        </main>
+    </div>
+
+    <!-- Admin Login Seite -->
+    <div id="admin" class="page">
+        <div class="login-container" id="loginContainer">
+            <div class="login-form">
+                <h2>Admin Login</h2>
+                <div class="form-group">
+                    <label for="username">Benutzername</label>
+                    <input type="text" id="username" placeholder="Admin Benutzername">
+                </div>
+                <div class="form-group">
+                    <label for="password">Passwort</label>
+                    <input type="password" id="password" placeholder="Admin Passwort">
+                </div>
+                <button class="login-btn" onclick="login()">Anmelden</button>
+                
+                <div class="message error" id="errorMessage">
+                    <i class="fas fa-exclamation-circle"></i> Falscher Benutzername oder Passwort!
+                </div>
+                
+                <div class="message success" id="successMessage">
+                    <i class="fas fa-check-circle"></i> Login erfolgreich!
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Dashboard -->
+        <div class="admin-dashboard" id="adminDashboard">
+            <div class="dashboard-header">
+                <h2>Admin Dashboard</h2>
+                <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Abmelden</button>
+            </div>
+            
+            <div class="dashboard-grid">
+                <div class="dashboard-card">
+                    <h3>Shop Statistiken</h3>
+                    <p>Produkte insgesamt: <span class="stat" id="totalProducts">24</span></p>
+                    <p>Verkäufe diesen Monat: <span class="stat" id="monthlySales">142</span></p>
+                    <p>Umsatz: <span class="stat" id="totalRevenue">€3,548.50</span></p>
+                </div>
+                
+                <div class="dashboard-card">
+                    <h3>Benutzer Aktivität</h3>
+                    <p>Aktive Benutzer: <span class="stat" id="activeUsers">183</span></p>
+                    <p>Neue Registrierungen: <span class="stat" id="newRegistrations">27</span></p>
+                    <p>Support-Anfragen: <span class="stat" id="supportRequests">14</span></p>
+                </div>
+                
+                <div class="dashboard-card">
+                    <h3>System Status</h3>
+                    <p>Server Auslastung: <span class="stat" id="serverLoad">42%</span></p>
+                    <p>Online seit: <span class="stat" id="uptime">12 Tagen</span></p>
+                    <p>Letztes Backup: <span class="stat" id="lastBackup">Heute, 03:00</span></p>
+                </div>
+            </div>
+            
+            <div class="admin-tabs">
+                <div class="admin-tab active" data-tab="orders">Bestellungen</div>
+                <div class="admin-tab" data-tab="products">Produkte</div>
+                <div class="admin-tab" data-tab="settings">Einstellungen</div>
+                <div class="admin-tab" data-tab="profile">Profil</div>
+            </div>
+            
+            <div class="tab-content active" id="ordersTab">
+                <h3 style="margin-bottom: 20px;">Bestellungen verwalten</h3>
+                <div class="admin-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="orderFilter">Filter nach Status</label>
+                            <select id="orderFilter" onchange="filterOrders()">
+                                <option value="all">Alle Bestellungen</option>
+                                <option value="completed">Abgeschlossen</option>
+                                <option value="pending">Ausstehend</option>
+                                <option value="cancelled">Storniert</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="searchOrder">Bestellung suchen</label>
+                            <input type="text" id="searchOrder" placeholder="Bestellnummer oder Kundenname" onkeyup="searchOrders()">
+                        </div>
+                    </div>
+                </div>
+                
+                <table class="orders-table">
+                    <thead>
+                        <tr>
+                            <th>Bestellnummer</th>
+                            <th>Kunde</th>
+                            <th>Datum</th>
+                            <th>Produkte</th>
+                            <th>Gesamtbetrag</th>
+                            <th>Status</th>
+                            <th>Aktionen</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersTableBody">
+                        <!-- Bestellungen werden dynamisch eingefügt -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="tab-content" id="productsTab">
+                <h3 style="margin-bottom: 20px;">Produkte verwalten</h3>
+                <div class="product-management">
+                    <div class="product-list">
+                        <h4>Produktliste</h4>
+                        <div id="productListItems">
+                            <!-- Produkte werden dynamisch eingefügt -->
+                        </div>
+                        <button class="action-btn" style="width: 100%; margin-top: 15px;" onclick="createNewProduct()">Neues Produkt</button>
+                    </div>
+                    <div class="product-form">
+                        <h4>Produktdetails</h4>
+                        <div class="form-group">
+                            <label for="productName">Produktname</label>
+                            <input type="text" id="productName">
+                        </div>
+                        <div class="form-group">
+                            <label for="productDescription">Beschreibung</label>
+                            <textarea id="productDescription" rows="3" style="width: 100%; padding: 12px; border: none; border-radius: 8px; background: var(--medium-gray); color: var(--text);"></textarea>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="productPrice">Preis (€)</label>
+                                <input type="number" id="productPrice" step="0.01">
+                            </div>
+                            <div class="form-group">
+                                <label for="productCategory">Kategorie</label>
+                                <select id="productCategory">
+                                    <option value="fivem">FiveM Scripts</option>
+                                    <option value="discord">Discord Bots</option>
+                                    <option value="bundles">Bundles</option>
+                                    <option value="sale">Angebote</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="productImage">Bild-URL</label>
+                            <input type="text" id="productImage">
+                        </div>
+                        <div class="form-group">
+                            <label for="productBadge">Badge (optional)</label>
+                            <input type="text" id="productBadge" placeholder="z.B. Bestseller, Neu, Angebot">
+                        </div>
+                        <div class="form-group">
+                            <label for="productOldPrice">Alter Preis (optional)</label>
+                            <input type="number" id="productOldPrice" step="0.01">
+                        </div>
+                        <button class="action-btn" style="width: 100%;" onclick="saveProduct()">Produkt speichern</button>
+                        <button class="action-btn" style="width: 100%; background: var(--error); margin-top: 10px;" onclick="deleteProduct()">Produkt löschen</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="settingsTab">
+                <h3 style="margin-bottom: 20px;">Einstellungen</h3>
+                <div class="admin-form">
+                    <h4>Shop-Einstellungen</h4>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="shopName">Shop-Name</label>
+                            <input type="text" id="shopName" value="LazeV Service">
+                        </div>
+                        <div class="form-group">
+                            <label for="currency">Währung</label>
+                            <select id="currency">
+                                <option value="eur">Euro (€)</option>
+                                <option value="usd">US-Dollar ($)</option>
+                                <option value="gbp">Britisches Pfund (£)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="adminEmail">Admin-E-Mail</label>
+                        <input type="email" id="adminEmail" value="admin@lazev-service.de">
+                    </div>
+                    <button class="action-btn" onclick="saveSettings()">Einstellungen speichern</button>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="profileTab">
+                <h3 style="margin-bottom: 20px;">Profil bearbeiten</h3>
+                <div class="admin-form">
+                    <h4>Persönliche Daten</h4>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="adminName">Name</label>
+                            <input type="text" id="adminName" value="LazeV Admin">
+                        </div>
+                        <div class="form-group">
+                            <label for="adminContactEmail">Kontakt-E-Mail</label>
+                            <input type="email" id="adminContactEmail" value="kontakt@lazev-service.de">
+                        </div>
+                    </div>
+                    <button class="action-btn" onclick="saveProfile()">Profil speichern</button>
+                </div>
+                
+                <div class="admin-form">
+                    <h4>Admin-Zugang ändern</h4>
+                    <div class="form-group">
+                        <label for="newUsername">Neuer Benutzername</label>
+                        <input type="text" id="newUsername">
+                    </div>
+                    <div class="form-group">
+                        <label for="newPassword">Neues Passwort</label>
+                        <input type="password" id="newPassword">
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">Passwort bestätigen</label>
+                        <input type="password" id="confirmPassword">
+                    </div>
+                    <button class="action-btn" onclick="changeAdminCredentials()">Zugangsdaten ändern</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Impressum Seite -->
+    <div id="impressum" class="page">
+        <main>
+            <div class="rounded-container legal-content">
+                <h1>Impressum</h1>
+                
+                <h2>Angaben gemäß § 5 TMG</h2>
+                <p><strong>LazeV Service</strong><br />
+                Musterstraße 123<br />
+                12345 Musterstadt</p>
+                
+                <h2>Vertreten durch</h2>
+                <p>Luca Mustermann<br />
+                Max Mustermann<br />
+                Jonas Mustermann</p>
+                
+                <h2>Kontakt</h2>
+                <p>Telefon: +49 (0) 123 456 789<br />
+                E-Mail: info@lazev-service.de</p>
+                
+                <h2>Umsatzsteuer-ID</h2>
+                <p>Umsatzsteuer-Identifikationsnummer gemäß § 27 a Umsatzsteuergesetz:<br />
+                DE123456789</p>
+                
+                <h2>Verbraucherstreitbeilegung/Universalschlichtungsstelle</h2>
+                <p>Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
+                
+                <h2>Haftung für Inhalte</h2>
+                <p>Als Diensteanbieter sind wir gemäß § 7 Abs.1 TMG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 TMG sind wir als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen oder nach Umständen zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen.</p>
+                
+                <p>Verwendete Quelle: <a href="https://www.e-recht24.de" target="_blank">eRecht24</a></p>
+            </div>
+        </main>
+    </div>
+
+    <!-- Datenschutz Seite -->
+    <div id="datenschutz" class="page">
+        <main>
+            <div class="rounded-container legal-content">
+                <h1>Datenschutzerklärung</h1>
+                
+                <h2>1. Datenschutz auf einen Blick</h2>
+                <h3>Allgemeine Informationen</h3>
+                <p>Die folgenden Hinweise geben einen einfachen Überblick darüber, was mit Ihren personenbezogenen Daten passiert, wenn Sie diese Website besuchen. Personenbezogene Daten sind alle Daten, mit denen Sie persönlich identifiziert werden können.</p>
+                
+                <h3>Datenerfassung auf dieser Website</h3>
+                <p><strong>Wer ist verantwortlich für die Datenerfassung auf dieser Website?</strong></p>
+                <p>Die Datenverarbeitung auf dieser Website erfolgt durch den Websitebetreiber. Dessen Kontaktdaten können Sie dem Abschnitt "Hinweis zur Verantwortlichen Stelle" in dieser Datenschutzerklärung entnehmen.</p>
+                
+                <p><strong>Wie erfassen wir Ihre Daten?</strong></p>
+                <p>Ihre Daten werden zum einen dadurch erhoben, dass Sie uns diese mitteilen. Hierbei kann es sich z.B. um Daten handeln, die Sie in ein Kontaktformular eingeben.</p>
+                
+                <p><strong>Wofür nutzen wir Ihre Daten?</strong></p>
+                <p>Ein Teil der Daten wird erhoben, um eine fehlerfreie Bereitstellung der Website zu gewährleisten. Andere Daten können zur Analyse Ihres Nutzerverhaltens verwendet werden.</p>
+                
+                <p><strong>Welche Rechte haben Sie bezüglich Ihrer Daten?</strong></p>
+                <p>Sie haben jederzeit das Recht, unentgeltlich Auskunft über Herkunft, Empfänger und Zweck Ihrer gespeicherten personenbezogenen Daten zu erhalten. Sie haben außerdem ein Recht, die Berichtigung oder Löschung dieser Daten zu verlangen.</p>
+                
+                <h2>2. Hosting</h2>
+                <p>We hosten die Inhalte unserer Website bei folgendem Anbieter:</p>
+                
+                <h3>Externes Hosting</h3>
+                <p>Diese Website wird extern gehostet. Die personenbezogenen Daten, die auf dieser Website erfasst werden, werden auf den Servern des Hosters / der Hoster gespeichert.</p>
+                
+                <h2>3. Allgemeine Hinweise und Pflichtinformationen</h2>
+                <h3>Datenschutz</h3>
+                <p>Die Betreiber dieser Seiten nehmen den Schutz Ihrer persönlichen Daten sehr ernst. Wir behandeln Ihre personenbezogenen Daten vertraulich und entsprechend den gesetzlichen Datenschutzvorschriften sowie dieser Datenschutzerklärung.</p>
+                
+                <p>Verwendete Quelle: <a href="https://www.e-recht24.de" target="_blank">eRecht24</a></p>
+            </div>
+        </main>
+    </div>
+
+    <!-- Team Seite -->
+    <div id="team" class="page">
+        <main>
+            <section class="hero">
+                <h1>Unser Team</h1>
+                <p>Hinter LazeV Service steht ein leidenschaftliches Team von Entwicklern, die sich auf die Erstellung hochwertiger FiveM Scripts und Discord Bots spezialisiert haben.</p>
+            </section>
+
+            <div class="rounded-container">
+                <h2>Geschäftsführung</h2>
+                <div class="services">
+                    <div class="service-card animate">
+                        <div style="width: 150px; height: 150px; border-radius: 50%; background: #5e5e5e; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 3rem;">
+                            L
+                        </div>
+                        <h3>Luca</h3>
+                        <p>CEO & Gründer</p>
+                        <p>Verantwortlich für die strategische Ausrichtung und Geschäftsentwicklung.</p>
+                    </div>
+                    <div class="service-card animate">
+                        <div style="width: 150px; height: 150px; border-radius: 50%; background: #5e5e5e; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 3rem;">
+                            M
+                        </div>
+                        <h3>Max</h3>
+                        <p>CTO & Lead Developer</p>
+                        <p>Verantwortlich für die technische Entwicklung und Qualitätssicherung.</p>
+                    </div>
+                    <div class="service-card animate">
+                        <div style="width: 150px; height: 150px; border-radius: 50%; background: #5e5e5e; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 3rem;">
+                            J
+                        </div>
+                        <h3>Jonas</h3>
+                        <p>COO & Community Manager</p>
+                        <p>Verantwortlich für Betrieb, Kundenupport und Community-Management.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="rounded-container">
+                <h2>Unsere Entwickler</h2>
+                <p>Unser Team besteht aus erfahrenen Entwicklern, die sich auf verschiedene Bereiche spezialisiert haben:</p>
+                <div class="services">
+                    <div class="service-card animate">
+                        <i class="fas fa-laptop-code"></i>
+                        <h3>FiveM Entwickler</h3>
+                        <p>Unsere FiveM-Experten erstellen innovative Scripts und Ressourcen für deinen Server.</p>
+                    </div>
+                    <div class="service-card animate">
+                        <i class="fab fa-discord"></i>
+                        <h3>Discord Bot Entwickler</h3>
+                        <p>Unsere Discord-Spezialisten entwickeln maßgeschneiderte Bots für deine Community.</p>
+                    </div>
+                    <div class="service-card animate">
+                        <i class="fas fa-paint-brush"></i>
+                        <h3>UI/UX Designer</h3>
+                        <p>Unsere Designer sorgen für ein ansprechendes Benutzererlebnis auf allen Plattformen.</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">LazeV Service</div>
+            <div class="footer-links">
+                <a href="#" class="nav-link" data-page="impressum">Impressum</a>
+                <a href="#" class="nav-link" data-page="datenschutz">Datenschutz</a>
+                <a href="mailto:info@lazev-service.de">Kontakt</a>
+            </div>
+            <div class="accessibility-statement">
+                <a href="#" onclick="showAccessibilityStatement(); return false;">Barrierefreiheitserklärung</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Produktdaten
+        let products = [
+            {
+                id: 1,
+                name: "Advanced Roleplay System",
+                description: "Umfassendes Roleplay-System mit Jobs, Fraktionen und einem einzigartigen Wirtschaftssystem.",
+                price: 49.99,
+                image: "https://images.unsplash.com/photo-1614680376573-df3480f0c6ff?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80",
+                category: "fivem",
+                badge: "Bestseller"
+            },
+            {
+                id: 2,
+                name: "Discord Admin Bot",
+                description: "Leistungsstarker Moderations-Bot mit Ticket-System, Logging und Automoderation.",
+                price: 29.99,
+                image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
+                category: "discord",
+                badge: "Neu"
+            },
+            {
+                id: 3,
+                name: "Vehicle System Pro",
+                description: "Realistisches Fahrzeugsystem mit Tuning, Schadensmodell und Tankstellen.",
+                price: 34.99,
+                image: "https://images.unsplash.com/photo-1587202372775-e229f172b9d4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80",
+                category: "fivem"
+            },
+            {
+                id: 4,
+                name: "Music Bot Deluxe",
+                description: "High-Quality Music Bot mit Playlist-Support und nahtloser Integration.",
+                price: 24.99,
+                oldPrice: 34.99,
+                image: "https://images.unsplash.com/photo-1611262588024-d12430b98920?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80",
+                category: "discord",
+                badge: "Angebot"
+            },
+            {
+                id: 5,
+                name: "Housing System",
+                description: "Realistisches Immobilien-System mit Miete, Kauf und Einrichtungsmöglichkeiten.",
+                price: 39.99,
+                image: "https://images.unsplash.com/photo-1627398242454-45a1465c2479?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80",
+                category: "fivem"
+            },
+            {
+                id: 6,
+                name: "Starter Package",
+                description: "Alles was du für den Start brauchst: Roleplay-System, Vehicle-System und Admin-Bot.",
+                price: 89.99,
+                oldPrice: 114.97,
+                image: "https://images.unsplash.com/photo-1589652717521-10c0d092dea9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
+                category: "bundles",
+                badge: "Bundle"
+            }
+        ];
+
+        // Bestellungen
+        let orders = [
+            {
+                id: 1001,
+                customer: "Max Mustermann",
+                date: "15.05.2023",
+                products: "Advanced Roleplay System, Discord Admin Bot",
+                total: 79.98,
+                status: "completed"
+            },
+            {
+                id: 1002,
+                customer: "Anna Schmidt",
+                date: "16.05.2023",
+                products: "Vehicle System Pro",
+                total: 34.99,
+                status: "pending"
+            },
+            {
+                id: 1003,
+                customer: "Thomas Weber",
+                date: "17.05.2023",
+                products: "Starter Package",
+                total: 89.99,
+                status: "completed"
+            },
+            {
+                id: 1004,
+                customer: "Julia Fischer",
+                date: "18.05.2023",
+                products: "Music Bot Deluxe",
+                total: 24.99,
+                status: "cancelled"
+            }
+        ];
+
+        // Warenkorb
+        let cart = [];
+        let currentPaymentMethod = '';
+        let selectedProductId = null;
+        
+        // Admin-Daten
+        let adminData = {
+            name: "LazeV Admin",
+            email: "kontakt@lazev-service.de",
+            username: "admin",
+            password: "admin123"
+        };
+
+        // Barrierefreiheits-Funktionen
+        function toggleHighContrast() {
+            document.body.classList.toggle('accessibility-high-contrast');
+            // Speichern der Einstellung im localStorage
+            if (document.body.classList.contains('accessibility-high-contrast')) {
+                localStorage.setItem('highContrast', 'enabled');
+            } else {
+                localStorage.setItem('highContrast', 'disabled');
+            }
+        }
+        
+        function setFontSize(size) {
+            document.body.classList.remove('accessibility-large-text', 'accessibility-larger-text');
+            if (size === 'large') {
+                document.body.classList.add('accessibility-large-text');
+                localStorage.setItem('fontSize', 'large');
+            } else if (size === 'larger') {
+                document.body.classList.add('accessibility-larger-text');
+                localStorage.setItem('fontSize', 'larger');
+            } else {
+                localStorage.setItem('fontSize', 'normal');
+            }
+        }
+        
+        function speakPageTitle() {
+            if ('speechSynthesis' in window) {
+                const speech = new SpeechSynthesisUtterance();
+                speech.text = document.title + ". " + document.querySelector('h1').textContent;
+                speech.volume = 1;
+                speech.rate = 1;
+                speech.pitch = 1;
+                window.speechSynthesis.speak(speech);
+            } else {
+                alert("Ihr Browser unterstützt die Sprachausgabe nicht.");
+            }
+        }
+        
+        function showAccessibilityStatement() {
+            alert("Barrierefreiheitserklärung: Wir haben diese Website für alle Nutzer zugänglich gestaltet. Sie können den Kontrastmodus und die Schriftgröße anpassen.");
+        }
+        
+        // Beim Laden gespeicherte Einstellungen anwenden
+        window.addEventListener('DOMContentLoaded', function() {
+            if (localStorage.getItem('highContrast') === 'enabled') {
+                document.body.classList.add('accessibility-high-contrast');
+            }
+            
+            const fontSize = localStorage.getItem('fontSize');
+            if (fontSize === 'large') {
+                document.body.classList.add('accessibility-large-text');
+            } else if (fontSize === 'larger') {
+                document.body.classList.add('accessibility-larger-text');
+            }
+        });
+
+        // Navigation zwischen Seiten
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetPage = this.getAttribute('data-page');
+                
+                // Wenn Admin-Link geklickt wird, Admin-Seite öffnen
+                if (targetPage === 'admin') {
+                    toggleAdminLogin();
+                    return;
+                }
+                
+                // Alle Seiten ausblenden
+                document.querySelectorAll('.page').forEach(page => {
+                    page.classList.remove('active');
+                });
+                
+                // Zielseite anzeigen
+                document.getElementById(targetPage).classList.add('active');
+                
+                // Aktiven Link markieren
+                document.querySelectorAll('.nav-link').forEach(navLink => {
+                    navLink.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                // Nach oben scrollen
+                window.scrollTo(0, 0);
+            });
+        });
+        
+        // Produkte anzeigen
+        function renderProducts() {
+            const productsGrid = document.getElementById('productsGrid');
+            productsGrid.innerHTML = '';
+            
+            const activeCategory = document.querySelector('.category-btn.active').getAttribute('data-category');
+            
+            products.forEach(product => {
+                if (activeCategory === 'all' || product.category === activeCategory) {
+                    const productCard = document.createElement('div');
+                    productCard.className = 'product-card animate';
+                    productCard.innerHTML = `
+                        <div class="product-image">
+                            <img src="${product.image}" alt="${product.name}">
+                            ${product.badge ? `<div class="product-badge">${product.badge}</div>` : ''}
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-title">${product.name}</h3>
+                            <p class="product-description">${product.description}</p>
+                            <div class="product-price">
+                                €${product.price.toFixed(2)}
+                                ${product.oldPrice ? `<span style="text-decoration: line-through; color: #ccc; font-size: 1rem;">€${product.oldPrice.toFixed(2)}</span>` : ''}
+                            </div>
+                            <button class="buy-btn" onclick="addToCart(${product.id})">In den Warenkorb</button>
+                        </div>
+                    `;
+                    productsGrid.appendChild(productCard);
+                }
+            });
+            
+            // Animationen neu initialisieren
+            initAnimations();
+        }
+        
+        // Kategorie-Buttons
+        document.querySelectorAll('.category-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                document.querySelectorAll('.category-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                this.classList.add('active');
+                renderProducts();
+            });
+        });
+        
+        // Warenkorb-Funktionen
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            const existingItem = cart.find(item => item.id === productId);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    image: product.image,
+                    quantity: 1
+                });
+            }
+            
+            updateCart();
+            openCart();
+        }
+        
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            updateCart();
+        }
+        
+        function updateCart() {
+            const cartItems = document.getElementById('cartItems');
+            const cartTotal = document.getElementById('cartTotal');
+            const cartBadge = document.getElementById('cartBadge');
+            
+            cartItems.innerHTML = '';
+            let total = 0;
+            let itemCount = 0;
+            
+            cart.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                itemCount += item.quantity;
+                
+                const cartItem = document.createElement('div');
+                cartItem.className = 'cart-item';
+                cartItem.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 8px;">
+                    <div class="cart-item-info">
+                        <div class="cart-item-title">${item.name}</div>
+                        <div class="cart-item-price">€${item.price.toFixed(2)}</div>
+                    </div>
+                    <div class="cart-item-quantity">
+                        <button class="quantity-btn" onclick="changeQuantity(${item.id}, -1)">-</button>
+                        <span style="margin: 0 10px;">${item.quantity}</span>
+                        <button class="quantity-btn" onclick="changeQuantity(${item.id}, 1)">+</button>
+                    </div>
+                    <button class="cart-item-remove" onclick="removeFromCart(${item.id})">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                `;
+                cartItems.appendChild(cartItem);
+            });
+            
+            cartTotal.textContent = `€${total.toFixed(2)}`;
+            cartBadge.textContent = itemCount;
+            
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<p style="text-align: center; padding: 20px;">Ihr Warenkorb ist leer</p>';
+            }
+        }
+        
+        function changeQuantity(productId, change) {
+            const item = cart.find(item => item.id === productId);
+            if (item) {
+                item.quantity += change;
+                if (item.quantity <= 0) {
+                    removeFromCart(productId);
+                } else {
+                    updateCart();
+                }
+            }
+        }
+        
+        function openCart() {
+            document.getElementById('cartContainer').classList.add('open');
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('checkoutContainer').style.display = 'none';
+        }
+        
+        function closeCart() {
+            document.getElementById('cartContainer').classList.remove('open');
+            document.getElementById('overlay').style.display = 'none';
+        }
+        
+        function showCheckout() {
+            if (cart.length === 0) {
+                alert('Ihr Warenkorb ist leer');
+                return;
+            }
+            document.getElementById('checkoutContainer').style.display = 'block';
+        }
+        
+        function backToCart() {
+            document.getElementById('checkoutContainer').style.display = 'none';
+        }
+        
+        function selectPayment(method) {
+            currentPaymentMethod = method;
+            document.querySelectorAll('.payment-method').forEach(el => {
+                el.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+        }
+        
+        function placeOrder() {
+            if (cart.length === 0) {
+                alert('Ihr Warenkorb ist leer');
+                return;
+            }
+            
+            if (!currentPaymentMethod) {
+                alert('Bitte wählen Sie eine Zahlungsmethode aus');
+                return;
+            }
+            
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const address = document.getElementById('address').value;
+            const city = document.getElementById('city').value;
+            
+            if (!name || !email || !address || !city) {
+                alert('Bitte füllen Sie alle Felder aus');
+                return;
+            }
+            
+            // Bestellung erstellen
+            const orderId = Math.floor(1000 + Math.random() * 9000);
+            const orderDate = new Date().toLocaleDateString('de-DE');
+            const orderTotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+            const orderProducts = cart.map(item => item.name).join(', ');
+            
+            // Neue Bestellung hinzufügen
+            orders.unshift({
+                id: orderId,
+                customer: name,
+                date: orderDate,
+                products: orderProducts,
+                total: orderTotal,
+                status: "pending"
+            });
+            
+            // Admin-Statistiken aktualisieren
+            updateAdminStats();
+            
+            alert(`Vielen Dank für Ihre Bestellung! Ihre Bestellnummer ist #${orderId}. Wir bearbeiten diese so schnell wie möglich.`);
+            cart = [];
+            updateCart();
+            closeCart();
+            
+            // Formular zurücksetzen
+            document.getElementById('name').value = '';
+            document.getElementById('email').value = '';
+            document.getElementById('address').value = '';
+            document.getElementById('city').value = '';
+            document.querySelectorAll('.payment-method').forEach(el => {
+                el.classList.remove('selected');
+            });
+            currentPaymentMethod = '';
+        }
+        
+        // Admin-Funktionen
+        function toggleAdminLogin() {
+            // Alle Seiten ausblenden
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Admin-Seite anzeigen
+            document.getElementById('admin').classList.add('active');
+            
+            // Aktiven Link markieren
+            document.querySelectorAll('.nav-link').forEach(navLink => {
+                navLink.classList.remove('active');
+            });
+            
+            // Login-Container zurücksetzen
+            document.getElementById('loginContainer').style.display = 'flex';
+            document.getElementById('adminDashboard').style.display = 'none';
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'none';
+            
+            // Nach oben scrollen
+            window.scrollTo(0, 0);
+        }
+        
+        // Funktion zum Anmelden
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('errorMessage');
+            const successMessage = document.getElementById('successMessage');
+            
+            if (username === adminData.username && password === adminData.password) {
+                // Erfolgreicher Login
+                errorMessage.style.display = 'none';
+                successMessage.style.display = 'block';
+                
+                // Nach 1 Sekunde Dashboard anzeigen
+                setTimeout(() => {
+                    document.getElementById('loginContainer').style.display = 'none';
+                    document.getElementById('adminDashboard').style.display = 'block';
+                    updateAdminStats();
+                    renderOrders();
+                    renderProductList();
+                    loadAdminProfile();
+                }, 1000);
+            } else {
+                // Fehler beim Login
+                successMessage.style.display = 'none';
+                errorMessage.style.display = 'block';
+            }
+        }
+        
+        // Funktion zum Abmelden
+        function logout() {
+            document.getElementById('adminDashboard').style.display = 'none';
+            document.getElementById('loginContainer').style.display = 'flex';
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'none';
+        }
+        
+        // Admin-Statistiken aktualisieren
+        function updateAdminStats() {
+            const totalRevenue = orders.reduce((total, order) => total + order.total, 0);
+            const monthlySales = orders.filter(order => {
+                const orderDate = new Date(order.date.split('.').reverse().join('-'));
+                const currentDate = new Date();
+                return orderDate.getMonth() === currentDate.getMonth() && 
+                       orderDate.getFullYear() === currentDate.getFullYear();
+            }).length;
+            
+            document.getElementById('totalProducts').textContent = products.length;
+            document.getElementById('monthlySales').textContent = monthlySales;
+            document.getElementById('totalRevenue').textContent = `€${totalRevenue.toFixed(2)}`;
+            document.getElementById('activeUsers').textContent = Math.floor(Math.random() * 50) + 150;
+            document.getElementById('newRegistrations').textContent = Math.floor(Math.random() * 10) + 5;
+            document.getElementById('supportRequests').textContent = Math.floor(Math.random() * 5) + 10;
+        }
+        
+        // Bestellungen anzeigen
+        function renderOrders() {
+            const ordersTableBody = document.getElementById('ordersTableBody');
+            ordersTableBody.innerHTML = '';
+            
+            const filterValue = document.getElementById('orderFilter').value;
+            const searchValue = document.getElementById('searchOrder').value.toLowerCase();
+            
+            let filteredOrders = orders;
+            
+            if (filterValue !== 'all') {
+                filteredOrders = filteredOrders.filter(order => order.status === filterValue);
+            }
+            
+            if (searchValue) {
+                filteredOrders = filteredOrders.filter(order => 
+                    order.id.toString().includes(searchValue) || 
+                    order.customer.toLowerCase().includes(searchValue)
+                );
+            }
+            
+            filteredOrders.forEach(order => {
+                const row = document.createElement('tr');
+                let statusClass = '';
+                let statusText = '';
+                
+                switch(order.status) {
+                    case 'completed':
+                        statusClass = 'completed';
+                        statusText = 'Abgeschlossen';
+                        break;
+                    case 'pending':
+                        statusClass = 'pending';
+                        statusText = 'Ausstehend';
+                        break;
+                    case 'cancelled':
+                        statusClass = 'cancelled';
+                        statusText = 'Storniert';
+                        break;
+                }
+                
+                row.innerHTML = `
+                    <td>#${order.id}</td>
+                    <td>${order.customer}</td>
+                    <td>${order.date}</td>
+                    <td>${order.products}</td>
+                    <td>€${order.total.toFixed(2)}</td>
+                    <td><span class="status ${statusClass}">${statusText}</span></td>
+                    <td>
+                        <button class="quantity-btn" onclick="changeOrderStatus(${order.id}, 'completed')" title="Als abgeschlossen markieren"><i class="fas fa-check"></i></button>
+                        <button class="quantity-btn" onclick="changeOrderStatus(${order.id}, 'pending')" title="Als ausstehend markieren"><i class="fas fa-clock"></i></button>
+                        <button class="quantity-btn" onclick="changeOrderStatus(${order.id}, 'cancelled')" title="Stornieren"><i class="fas fa-times"></i></button>
+                    </td>
+                `;
+                ordersTableBody.appendChild(row);
+            });
+        }
+        
+        // Bestellstatus ändern
+        function changeOrderStatus(orderId, status) {
+            const order = orders.find(o => o.id === orderId);
+            if (order) {
+                order.status = status;
+                renderOrders();
+                updateAdminStats();
+            }
+        }
+        
+        // Bestellungen filtern
+        function filterOrders() {
+            renderOrders();
+        }
+        
+        // Bestellungen durchsuchen
+        function searchOrders() {
+            renderOrders();
+        }
+        
+        // Produktliste anzeigen
+        function renderProductList() {
+            const productListItems = document.getElementById('productListItems');
+            productListItems.innerHTML = '';
+            
+            products.forEach(product => {
+                const item = document.createElement('div');
+                item.className = 'product-list-item';
+                if (product.id === selectedProductId) {
+                    item.classList.add('selected');
+                }
+                item.innerHTML = `
+                    <strong>${product.name}</strong> - €${product.price.toFixed(2)}
+                    <div style="font-size: 0.8rem; color: #ccc;">${product.category}</div>
+                `;
+                item.addEventListener('click', () => selectProduct(product.id));
+                productListItems.appendChild(item);
+            });
+        }
+        
+        // Produkt auswählen
+        function selectProduct(productId) {
+            selectedProductId = productId;
+            const product = products.find(p => p.id === productId);
+            
+            if (product) {
+                document.getElementById('productName').value = product.name;
+                document.getElementById('productDescription').value = product.description;
+                document.getElementById('productPrice').value = product.price;
+                document.getElementById('productCategory').value = product.category;
+                document.getElementById('productImage').value = product.image;
+                document.getElementById('productBadge').value = product.badge || '';
+                document.getElementById('productOldPrice').value = product.oldPrice || '';
+                
+                // Auswahl in der Liste markieren
+                document.querySelectorAll('.product-list-item').forEach(item => {
+                    item.classList.remove('selected');
+                });
+                event.currentTarget.classList.add('selected');
+            }
+        }
+        
+        // Neues Produkt erstellen
+        function createNewProduct() {
+            selectedProductId = null;
+            document.getElementById('productName').value = '';
+            document.getElementById('productDescription').value = '';
+            document.getElementById('productPrice').value = '';
+            document.getElementById('productCategory').value = 'fivem';
+            document.getElementById('productImage').value = '';
+            document.getElementById('productBadge').value = '';
+            document.getElementById('productOldPrice').value = '';
+            
+            // Auswahl in der Liste entfernen
+            document.querySelectorAll('.product-list-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+        }
+        
+        // Produkt speichern
+        function saveProduct() {
+            const name = document.getElementById('productName').value;
+            const description = document.getElementById('productDescription').value;
+            const price = parseFloat(document.getElementById('productPrice').value);
+            const category = document.getElementById('productCategory').value;
+            const image = document.getElementById('productImage').value;
+            const badge = document.getElementById('productBadge').value;
+            const oldPrice = parseFloat(document.getElementById('productOldPrice').value) || null;
+            
+            if (!name || !description || isNaN(price) || !category || !image) {
+                alert('Bitte füllen Sie alle Pflichtfelder aus');
+                return;
+            }
+            
+            if (selectedProductId) {
+                // Vorhandenes Produkt aktualisieren
+                const productIndex = products.findIndex(p => p.id === selectedProductId);
+                if (productIndex !== -1) {
+                    products[productIndex] = {
+                        ...products[productIndex],
+                        name,
+                        description,
+                        price,
+                        category,
+                        image,
+                        badge: badge || undefined,
+                        oldPrice: oldPrice || undefined
+                    };
+                }
+            } else {
+                // Neues Produkt erstellen
+                const newId = Math.max(...products.map(p => p.id)) + 1;
+                products.push({
+                    id: newId,
+                    name,
+                    description,
+                    price,
+                    category,
+                    image,
+                    badge: badge || undefined,
+                    oldPrice: oldPrice || undefined
+                });
+                selectedProductId = newId;
+            }
+            
+            alert('Produkt gespeichert!');
+            renderProductList();
+            renderProducts();
+            updateAdminStats();
+        }
+        
+        // Produkt löschen
+        function deleteProduct() {
+            if (!selectedProductId) {
+                alert('Bitte wählen Sie ein Produkt aus');
+                return;
+            }
+            
+            if (confirm('Sind Sie sicher, dass Sie dieses Produkt löschen möchten?')) {
+                products = products.filter(p => p.id !== selectedProductId);
+                selectedProductId = null;
+                
+                // Formular zurücksetzen
+                document.getElementById('productName').value = '';
+                document.getElementById('productDescription').value = '';
+                document.getElementById('productPrice').value = '';
+                document.getElementById('productImage').value = '';
+                document.getElementById('productBadge').value = '';
+                document.getElementById('productOldPrice').value = '';
+                
+                alert('Produkt gelöscht!');
+                renderProductList();
+                renderProducts();
+                updateAdminStats();
+            }
+        }
+        
+        // Einstellungen speichern
+        function saveSettings() {
+            const shopName = document.getElementById('shopName').value;
+            const currency = document.getElementById('currency').value;
+            const adminEmail = document.getElementById('adminEmail').value;
+            
+            // Hier könnten die Einstellungen gespeichert werden
+            alert('Einstellungen gespeichert!');
+        }
+        
+        // Profil laden
+        function loadAdminProfile() {
+            document.getElementById('adminName').value = adminData.name;
+            document.getElementById('adminContactEmail').value = adminData.email;
+        }
+        
+        // Profil speichern
+        function saveProfile() {
+            adminData.name = document.getElementById('adminName').value;
+            adminData.email = document.getElementById('adminContactEmail').value;
+            
+            alert('Profil gespeichert!');
+        }
+        
+        // Admin-Zugangsdaten ändern
+        function changeAdminCredentials() {
+            const newUsername = document.getElementById('newUsername').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (!newUsername || !newPassword) {
+                alert('Bitte füllen Sie alle Felder aus');
+                return;
+            }
+            
+            if (newPassword !== confirmPassword) {
+                alert('Die Passwörter stimmen nicht überein');
+                return;
+            }
+            
+            adminData.username = newUsername;
+            adminData.password = newPassword;
+            
+            // Felder zurücksetzen
+            document.getElementById('newUsername').value = '';
+            document.getElementById('newPassword').value = '';
+            document.getElementById('confirmPassword').value = '';
+            
+            alert('Admin-Zugangsdaten wurden geändert!');
+        }
+        
+        // Tab-Wechsel
+        document.querySelectorAll('.admin-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                const tabId = this.getAttribute('data-tab');
+                
+                // Tabs aktivieren/deaktivieren
+                document.querySelectorAll('.admin-tab').forEach(t => {
+                    t.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                // Tab-Inhalte anzeigen/ausblenden
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                document.getElementById(tabId + 'Tab').classList.add('active');
+                
+                // Bei Profil-Tab Daten laden
+                if (tabId === 'profile') {
+                    loadAdminProfile();
+                }
+            });
+        });
+        
+        // Animation für Elemente beim Scrollen
+        function initAnimations() {
+            const animatedElements = document.querySelectorAll('.animate');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animated');
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+            
+            animatedElements.forEach(element => {
+                observer.observe(element);
+            });
+        }
+        
+        // Enter-Taste zum Einloggen verwenden
+        document.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter' && document.getElementById('admin').classList.contains('active')) {
+                login();
+            }
+        });
+        
+        // Overlay schließt Warenkorb
+        document.getElementById('overlay').addEventListener('click', closeCart);
+        
+        // Initialisierung
+        document.addEventListener('DOMContentLoaded', function() {
+            renderProducts();
+            initAnimations();
+            updateCart();
+        });
+    </script>
+</body>
+</html>
